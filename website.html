@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT Integration</title>
+<style>
+    /* Your CSS styles for the chat interface */
+</style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="chat-display"></div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    // JavaScript to interact with the OpenAI API
+    const apiKey = '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'; // Replace with your actual API key
+    const chatDisplay = document.getElementById('chat-display');
+
+    async function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+        appendMessage('User: ' + userInput);
+        
+        // Make a request to the OpenAI API
+        const response = await fetch('https://api.openai.com/v1/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + apiKey,
+            },
+            body: JSON.stringify({
+                model: 'text-davinci-002', // You can choose different models
+                prompt: userInput,
+                max_tokens: 150,
+            }),
+        });
+
+        const data = await response.json();
+        const chatGPTResponse = data.choices[0].text.trim();
+        appendMessage('ChatGPT: ' + chatGPTResponse);
+    }
+
+    function appendMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = message;
+        chatDisplay.appendChild(messageElement);
+    }
+</script>
+
+</body>
+</html>
